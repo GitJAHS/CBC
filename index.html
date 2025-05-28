@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -7,7 +8,6 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap" rel="stylesheet">
 <style>
-/* একাধিকবার লেখা স্টাইল কম্প্রেস করা দরকার */
 body {
   margin: 0;
   height: 100vh;
@@ -90,14 +90,7 @@ button:active {
   font-weight: bold;
   max-width: 300px;
 }
-@keyframes glow {
-  0% { box-shadow: 0 0 15px 5px rgba(255, 255, 0, 0.6); }
-  50% { box-shadow: 0 0 40px 10px rgba(255, 255, 0, 1); }
-  100% { box-shadow: 0 0 15px 5px rgba(255, 255, 0, 0.6); }
-}
-#resultBox.animate-glow {
-  animation: glow 2s ease-in-out infinite alternate;
-}
+/* Removed glow animation */
 .form-group {
   position: relative;
   margin-top: 20px;
@@ -131,7 +124,45 @@ button:active {
 }
 </style>
 </head>
-<body class="dark-mode">
+<body id="theme">
+
+<style>
+.light-mode {
+  background-color: #ffffff;
+  color: #000000;
+}
+.light-mode .container {
+  background: #f3f3f3;
+}
+.light-mode .form-group input {
+  background: transparent;
+  color: #000;
+  border-color: #888;
+}
+.light-mode .form-group label {
+  background: #f3f3f3;
+  color: #666;
+}
+.light-mode #resultBox {
+  background-color: #007bff;
+  color: yellow;
+}
+.toggle-switch {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: inherit;
+}
+</style>
+<div class="toggle-switch">
+  <label for="themeToggle">🌞/🌙</label>
+  <input type="checkbox" id="themeToggle" onchange="toggleTheme()" />
+</div>
+
 <div class="container">
 <h1>ক্রাশিং বিল ক্যালকুলেটর</h1>
 <div style="display: flex; gap: 15px;">
@@ -148,10 +179,8 @@ button:active {
   <input id="rate" type="number" placeholder=" ">
   <label for="rate">দর - প্রতি মণ (৳)</label>
 </div>
-<button class="material-icon-btn" onclick="calculateBill()">
-  <span class="material-icons">calculate</span> হিসাব করুন
-</button>
-<div class="result" id="resultBox" style="display: none;"></div>
+
+<div class="result" id="resultBox">বিল: ০০৳</div>
 <div style="text-align: center; margin-top: 20px;">
   <button onclick="resetForm()" style="border-radius: 50%; width: 50px; height: 50px; background-color: #f44336; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 20px;">
     <span class="material-icons">refresh</span>
@@ -184,16 +213,15 @@ function calculateBill() {
   };
 
   resultBox.style.display = 'block';
-  resultBox.classList.add('animate-glow');
   resultBox.innerText = `বিল: ${toBanglaNumber(formatWithCommas(lastCalculation.total))}৳`;
 }
 function resetForm() {
   document.getElementById('weightMaund').value = '';
   document.getElementById('weightKg').value = '';
   document.getElementById('rate').value = '';
+  calculateBill();
   const resultBox = document.getElementById('resultBox');
   resultBox.style.display = 'none';
-  resultBox.classList.remove('animate-glow');
   resultBox.innerHTML = '';
 }
 const engToBnDigits = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
@@ -205,6 +233,18 @@ function formatWithCommas(x) {
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return parts.join(".");
 }
+
+document.getElementById('weightMaund').addEventListener('input', calculateBill);
+document.getElementById('weightKg').addEventListener('input', calculateBill);
+document.getElementById('rate').addEventListener('input', calculateBill);
 </script>
+
 </body>
+
+<script>
+function toggleTheme() {
+  const body = document.getElementById('theme');
+  body.classList.toggle('light-mode');
+}
+</script>
 </html>
