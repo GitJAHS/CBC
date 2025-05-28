@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8"/>
+<title>ক্রাশিং বিল ক্যালকুলেটর</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap" rel="stylesheet">
+<style>
+/* একাধিকবার লেখা স্টাইল কম্প্রেস করা দরকার */
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+  font-family: 'Nikosh', sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+  transition: background-color 0.5s, color 0.5s;
+}
+.container {
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+  background: #1e1e1e;
+  border-radius: 8px;
+}
+h1, h2 {
+  text-align: center;
+}
+label {
+  display: block;
+  margin-top: 10px;
+}
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: none;
+  font-size: 32px;
+  text-align: center;
+}
+button {
+  background-color: #4caf50;
+  color: white;
+  margin-top: 15px;
+  transition: transform 0.1s ease-in-out, background-color 0.3s ease;
+}
+button:active {
+  transform: scale(0.96);
+  background-color: #388e3c;
+}
+.result {
+  margin-top: 20px;
+  background-color: #333;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 18px;
+}
+.material-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 20px;
+  width: 60%;
+  padding: 12px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin: 12px auto 0 auto;
+}
+.material-icons {
+  font-size: 28px;
+}
+#resultBox {
+  margin: 25px auto 0 auto;
+  padding: 20px;
+  font-size: 32px;
+  text-align: center;
+  display: block;
+  border-radius: 12px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  max-width: 300px;
+}
+@keyframes glow {
+  0% { box-shadow: 0 0 15px 5px rgba(255, 255, 0, 0.6); }
+  50% { box-shadow: 0 0 40px 10px rgba(255, 255, 0, 1); }
+  100% { box-shadow: 0 0 15px 5px rgba(255, 255, 0, 0.6); }
+}
+#resultBox.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+.form-group {
+  position: relative;
+  margin-top: 20px;
+}
+.form-group input {
+  background: transparent;
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 28px 10px 12px 10px;
+  font-size: 26px;
+  width: 100%;
+}
+.form-group label {
+  position: absolute;
+  left: 12px;
+  top: 22px;
+  color: #aaa;
+  font-size: 24px;
+  pointer-events: none;
+  transition: 0.2s ease all;
+  background: #1e1e1e;
+  padding: 0 6px;
+}
+.form-group input:focus ~ label,
+.form-group input:not(:placeholder-shown) ~ label {
+  top: 5px;
+  left: 10px;
+  font-size: 18px;
+  color: #66afe9;
+}
+</style>
+</head>
+<body class="dark-mode">
+<div class="container">
+<h1>ক্রাশিং বিল ক্যালকুলেটর</h1>
+<div style="display: flex; gap: 15px;">
+  <div class="form-group" style="flex: 1; margin-right: 8px;">
+    <input id="weightMaund" type="number" placeholder=" ">
+    <label for="weightMaund">মণ</label>
+  </div>
+  <div class="form-group" style="flex: 1; margin-left: 8px;">
+    <input id="weightKg" type="number" placeholder=" ">
+    <label for="weightKg">কেজি</label>
+  </div>
+</div>
+<div class="form-group">
+  <input id="rate" type="number" placeholder=" ">
+  <label for="rate">দর - প্রতি মণ (৳)</label>
+</div>
+<button class="material-icon-btn" onclick="calculateBill()">
+  <span class="material-icons">calculate</span> হিসাব করুন
+</button>
+<div class="result" id="resultBox" style="display: none;"></div>
+<div style="text-align: center; margin-top: 20px;">
+  <button onclick="resetForm()" style="border-radius: 50%; width: 50px; height: 50px; background-color: #f44336; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; font-size: 20px;">
+    <span class="material-icons">refresh</span>
+  </button>
+</div>
+<div style="margin-top: 30px; text-align: center; font-size: 16px;">
+Al-Habib Tobacco &amp; Traders.<br/>Nandina, Jamalpur<br/>01740545355, 01971545355
+</div>
+</div>
+<script>
+let lastCalculation = {};
+function calculateBill() {
+  const weightMaund = parseFloat(document.getElementById('weightMaund').value) || 0;
+  const weightKg = parseFloat(document.getElementById('weightKg').value) || 0;
+  const rate = parseFloat(document.getElementById('rate').value);
+  const resultBox = document.getElementById('resultBox');
+
+  if ((!weightMaund && !weightKg) || !rate) {
+    resultBox.innerHTML = "<span style='color: white;'>দয়া করে উপরের ফিল্ড গুলো ভরাট করুন</span>";
+    return;
+  }
+
+  const totalWeightInMaund = weightMaund + (weightKg / 40);
+  const total = totalWeightInMaund * rate;
+
+  lastCalculation = {
+    weight: `${toBanglaNumber(weightMaund)} মণ ${toBanglaNumber(weightKg)} কেজি`,
+    rate: rate,
+    total: total.toFixed(2)
+  };
+
+  resultBox.style.display = 'block';
+  resultBox.classList.add('animate-glow');
+  resultBox.innerText = `বিল: ${toBanglaNumber(formatWithCommas(lastCalculation.total))}৳`;
+}
+function resetForm() {
+  document.getElementById('weightMaund').value = '';
+  document.getElementById('weightKg').value = '';
+  document.getElementById('rate').value = '';
+  const resultBox = document.getElementById('resultBox');
+  resultBox.style.display = 'none';
+  resultBox.classList.remove('animate-glow');
+  resultBox.innerHTML = '';
+}
+const engToBnDigits = { '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪', '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯' };
+function toBanglaNumber(numStr) {
+  return numStr.toString().replace(/[0-9]/g, d => engToBnDigits[d]);
+}
+function formatWithCommas(x) {
+  const parts = x.toString().split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parts.join(".");
+}
+</script>
+</body>
+</html>
