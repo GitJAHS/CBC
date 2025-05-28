@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <title>ক্রাশিং বিল ক্যালকুলেটর</title>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri&display=swap" rel="stylesheet">
 <style>
@@ -177,6 +177,32 @@ body.light-mode {
 }
 </style>
 
+
+<style>
+.responsive-container {
+  max-width: 480px;
+  width: 100%;
+  padding: 20px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .responsive-container {
+    padding: 10px;
+  }
+
+  input, select, button {
+    font-size: 24px;
+  }
+
+  #resultBox {
+    font-size: 24px;
+    padding: 12px;
+  }
+}
+</style>
+
 </head>
 <body id="theme">
 
@@ -197,7 +223,7 @@ body.light-mode {
 
 
 
-<div class="container">
+<div class="container" style="max-width: 100%; width: 100vw; height: 100vh; padding: 0 20px; box-sizing: border-box; margin: 0 auto;">
 <h1>ক্রাশিং বিল ক্যালকুলেটর</h1>
 <div style="display: flex; gap: 15px;">
   <div class="form-group" style="flex: 1; margin-right: 8px;">
